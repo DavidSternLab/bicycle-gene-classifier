@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+title: bicycle-gene-classifier
+message: >-
+  If you use this software, please cite both the software and the
+  associated paper.
+type: software
+authors:
+  - family-names: Stern
+    given-names: David L.
+    affiliation: Janelia Research Campus, HHMI
+  - family-names: Han
+    given-names: Yifan
+    affiliation: Janelia Research Campus, HHMI
+repository-code: 'https://github.com/DavidSternLab/bicycle-gene-classifier'
+abstract: >-
+  A logistic-regression classifier that identifies bicycle genes in
+  eukaryotic genome annotations using only gene-structure features
+  (exon counts, exon lengths, intron phases). Distributed with a
+  trained model for Hormaphis cornu (Hcor).
+keywords:
+  - bicycle genes
+  - aphids
+  - gene structure
+  - logistic regression
+  - genome annotation
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Stern
+      given-names: David L.
+    - family-names: Han
+      given-names: Yifan
+  title: >-
+    Genetic Innovations in Aphids' Salivary Gland Effectors via
+    Convergent Evolution Identified by Gene-Structure-Based Search
+  journal: Genome Biology and Evolution
+  volume: 14
+  issue: 6
+  year: 2022
+  doi: 10.1093/gbe/evac069
+  identifiers:
+    - type: other
+      value: 'PMID:35660862'

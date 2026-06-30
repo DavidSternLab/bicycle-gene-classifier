@@ -1,0 +1,32 @@
+#!/bin/bash
+# Usage: ./filter_gtf.sh gene_list.txt input.gtf output.gtf
+
+gene_list=$1
+input_gtf=$2
+output_gtf=$3
+
+if [ $# -ne 3 ]; then
+    echo "Usage: $0 gene_list.txt input.gtf output.gtf"
+    exit 1
+fi
+
+awk -v gene_file="$gene_list" '
+BEGIN {
+    # Read gene list file
+    while ((getline line < gene_file) > 0) {
+        genes[line] = 1
+    }
+    close(gene_file)
+}
+{
+    # Extract gene_id from GTF attributes column
+    match($9, /gene_id "([^"]+)"/, arr)
+    gene_id = arr[1]
+    
+    # Keep line if gene_id is in our list
+    if (gene_id in genes) {
+        print
+    }
+}' "$input_gtf" > "$output_gtf"
+
+echo "Filtered GTF saved to $output_gtf"

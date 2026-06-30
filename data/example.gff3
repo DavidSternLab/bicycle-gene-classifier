@@ -1,0 +1,46 @@
+##gff-version 3
+##sequence-region	example_chr	1	200000
+# Tiny synthetic GFF3 for smoke-testing bicycle_classifier.
+# Five gene/transcript pairs with 4-7 CDS exons each (the classifier requires
+# >=3 exons to extract its full feature set). Includes both strands and a mix
+# of phase values. Predictions on this file are NOT meaningful biology — this
+# is only here to confirm the pipeline runs end-to-end.
+example_chr	example	gene	1000	5500	.	+	.	ID=gene_A
+example_chr	example	mRNA	1000	5500	.	+	.	ID=mrna_A;Parent=gene_A
+example_chr	example	CDS	1000	1150	.	+	0	ID=cds_A1;Parent=mrna_A
+example_chr	example	CDS	2000	2150	.	+	0	ID=cds_A2;Parent=mrna_A
+example_chr	example	CDS	3000	3120	.	+	2	ID=cds_A3;Parent=mrna_A
+example_chr	example	CDS	4000	4090	.	+	1	ID=cds_A4;Parent=mrna_A
+example_chr	example	CDS	5000	5500	.	+	2	ID=cds_A5;Parent=mrna_A
+example_chr	example	gene	10000	15000	.	-	.	ID=gene_B
+example_chr	example	mRNA	10000	15000	.	-	.	ID=mrna_B;Parent=gene_B
+example_chr	example	CDS	10000	10400	.	-	0	ID=cds_B1;Parent=mrna_B
+example_chr	example	CDS	11000	11150	.	-	2	ID=cds_B2;Parent=mrna_B
+example_chr	example	CDS	12000	12200	.	-	0	ID=cds_B3;Parent=mrna_B
+example_chr	example	CDS	13000	13180	.	-	1	ID=cds_B4;Parent=mrna_B
+example_chr	example	CDS	14000	14250	.	-	2	ID=cds_B5;Parent=mrna_B
+example_chr	example	CDS	14800	15000	.	-	0	ID=cds_B6;Parent=mrna_B
+example_chr	example	gene	20000	22000	.	+	.	ID=gene_C
+example_chr	example	mRNA	20000	22000	.	+	.	ID=mrna_C;Parent=gene_C
+example_chr	example	CDS	20000	20100	.	+	0	ID=cds_C1;Parent=mrna_C
+example_chr	example	CDS	20500	20550	.	+	1	ID=cds_C2;Parent=mrna_C
+example_chr	example	CDS	21000	21080	.	+	2	ID=cds_C3;Parent=mrna_C
+example_chr	example	CDS	21500	21560	.	+	0	ID=cds_C4;Parent=mrna_C
+example_chr	example	CDS	21900	22000	.	+	2	ID=cds_C5;Parent=mrna_C
+example_chr	example	gene	30000	40000	.	-	.	ID=gene_D
+example_chr	example	mRNA	30000	40000	.	-	.	ID=mrna_D;Parent=gene_D
+example_chr	example	CDS	30000	30200	.	-	0	ID=cds_D1;Parent=mrna_D
+example_chr	example	CDS	32000	32500	.	-	0	ID=cds_D2;Parent=mrna_D
+example_chr	example	CDS	34000	34250	.	-	1	ID=cds_D3;Parent=mrna_D
+example_chr	example	CDS	36000	36180	.	-	2	ID=cds_D4;Parent=mrna_D
+example_chr	example	CDS	38000	38120	.	-	0	ID=cds_D5;Parent=mrna_D
+example_chr	example	CDS	39500	40000	.	-	2	ID=cds_D6;Parent=mrna_D
+example_chr	example	gene	50000	56000	.	+	.	ID=gene_E
+example_chr	example	mRNA	50000	56000	.	+	.	ID=mrna_E;Parent=gene_E
+example_chr	example	CDS	50000	50300	.	+	0	ID=cds_E1;Parent=mrna_E
+example_chr	example	CDS	51000	51060	.	+	0	ID=cds_E2;Parent=mrna_E
+example_chr	example	CDS	52000	52080	.	+	2	ID=cds_E3;Parent=mrna_E
+example_chr	example	CDS	53000	53090	.	+	1	ID=cds_E4;Parent=mrna_E
+example_chr	example	CDS	54000	54180	.	+	2	ID=cds_E5;Parent=mrna_E
+example_chr	example	CDS	55000	55070	.	+	0	ID=cds_E6;Parent=mrna_E
+example_chr	example	CDS	55700	56000	.	+	2	ID=cds_E7;Parent=mrna_E

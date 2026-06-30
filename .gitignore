@@ -1,0 +1,24 @@
+# Trained models live outside the repo (download via scripts/get_model.sh)
+models/
+*.rda
+*.RData
+*.Rdata
+
+# Default user model cache (in case anyone runs from a clone)
+.bicycle-classifier/
+
+# R session artifacts
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj.user/
+
+# Pipeline outputs
+bicycle_results/
+*_classifier_all_transcripts_response.txt
+*_classifier_bicycle_gene_names.txt
+*_classifier_response_histogram.pdf
+
+# OS junk
+.DS_Store
+Thumbs.db

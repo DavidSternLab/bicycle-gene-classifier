@@ -1,0 +1,104 @@
+#!/bin/bash
+# Bicycle Gene Classifier — wrapper script
+# Usage: bicycle_classifier -g input.gff3 [options]
+#        bicycle_classifier --download-model [--dest DIR]
+
+set -euo pipefail
+
+# Repo root = parent of bin/
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+R_SCRIPT="${REPO_ROOT}/R/bicycle_classifier.R"
+GET_MODEL_SCRIPT="${REPO_ROOT}/scripts/get_model.sh"
+
+# Default model location, in priority order:
+#   1. $BICYCLE_MODEL env var (set by lab module)
+#   2. ~/.bicycle-classifier/models/Hcor.glm.full_v5.5.6 (download target)
+#   3. <repo>/models/Hcor.glm.full_v5.5.6 (if present)
+DEFAULT_MODEL="${BICYCLE_MODEL:-}"
+[[ -z "${DEFAULT_MODEL}" ]] && DEFAULT_MODEL="${HOME}/.bicycle-classifier/models/Hcor.glm.full_v5.5.6"
+[[ -f "${DEFAULT_MODEL}" ]] || DEFAULT_MODEL="${REPO_ROOT}/models/Hcor.glm.full_v5.5.6"
+
+usage() {
+    cat <<EOF
+Usage: bicycle_classifier -g <gff_file> [options]
+       bicycle_classifier --download-model [--dest DIR]
+       bicycle_classifier --help
+
+Classify bicycle genes by gene-structural features.
+
+Required:
+  -g, --gff FILE        Input GFF3 (or GTF) file with CDS annotations.
+                        Must include phase + Parent (or transcript_id / gene_id).
+
+Optional:
+  -m, --model FILE      Path to trained GLM model (.rda).
+                        Default search order:
+                          \$BICYCLE_MODEL env var
+                          \$HOME/.bicycle-classifier/models/...
+                          <repo>/models/...
+  -c, --cutoff FLOAT    Classification cutoff threshold [0.72]
+  -o, --output PREFIX   Output file prefix [bicycle_output]
+  -d, --outdir DIR      Output directory [bicycle_results]
+      --download-model  Download the default Hcor model to
+                        \$HOME/.bicycle-classifier/models/ and exit
+      --dest DIR        Override download destination (use with --download-model)
+  -h, --help            Show this help
+
+Output (in --outdir):
+  <prefix>_classifier_all_transcripts_response.txt
+  <prefix>_classifier_bicycle_gene_names.txt
+  <prefix>_classifier_response_histogram.pdf
+
+Example:
+  bicycle_classifier -g my_genes.gff3 -o my_species -c 0.8
+
+Citation:
+  Stern DL & Han Y, 2022. Genome Biol Evol 14: evac069. PMID 35660862.
+EOF
+}
+
+DOWNLOAD_MODEL=false
+DOWNLOAD_DEST=""
+ARGS=()
+MODEL_ARG=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)        usage; exit 0 ;;
+        --download-model) DOWNLOAD_MODEL=true; shift ;;
+        --dest)           DOWNLOAD_DEST="$2"; shift 2 ;;
+        -m|--model)       MODEL_ARG="-m $2"; shift 2 ;;
+        *)                ARGS+=("$1"); shift ;;
+    esac
+done
+
+if [[ "${DOWNLOAD_MODEL}" == "true" ]]; then
+    [[ -x "${GET_MODEL_SCRIPT}" ]] || { echo "ERROR: ${GET_MODEL_SCRIPT} not found or not executable" >&2; exit 1; }
+    if [[ -n "${DOWNLOAD_DEST}" ]]; then
+        exec "${GET_MODEL_SCRIPT}" "${DOWNLOAD_DEST}"
+    else
+        exec "${GET_MODEL_SCRIPT}"
+    fi
+fi
+
+if [[ -z "${MODEL_ARG}" ]]; then
+    if [[ -f "${DEFAULT_MODEL}" ]]; then
+        MODEL_ARG="-m ${DEFAULT_MODEL}"
+    else
+        cat >&2 <<EOF
+ERROR: No model file specified and no default found.
+  Tried (in order):
+    \$BICYCLE_MODEL              = ${BICYCLE_MODEL:-<unset>}
+    ~/.bicycle-classifier/models = ${HOME}/.bicycle-classifier/models/Hcor.glm.full_v5.5.6
+    <repo>/models/               = ${REPO_ROOT}/models/Hcor.glm.full_v5.5.6
+
+To install the default Hcor model, run:
+    bicycle_classifier --download-model
+
+Or pass a model path explicitly with -m / --model.
+EOF
+        exit 1
+    fi
+fi
+
+exec Rscript "${R_SCRIPT}" ${MODEL_ARG} "${ARGS[@]}"
